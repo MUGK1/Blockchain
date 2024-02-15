@@ -1,30 +1,55 @@
 import Block from "./Block.js";
+import sha256 from "crypto-js";
 
 class Blockchain {
-  chain;
+  chain = [];
   constructor() {
-    this.chain = [this.createGenesisBlock()];
+    this.createGenesisBlock();
   }
 
   createGenesisBlock() {
-    return new Block("Genesis Block", "0");
+    let Genesis = new Block("Genesis Block", "N/A");
+    // Genesis = this.mine(Genesis);
+    console.log("Genesis Block Mined");
+    this.chain.push(Genesis);
   }
 
-  getLatestBlock() {
-    return this.chain[this.chain.length - 1];
+  mine(block) {
+    while (block.hash.substring(0, 3) !== "000") {
+      block.hash = sha256
+        .SHA256(block + block.nonce + block.timestamp)
+        .toString();
+      block.nonce++;
+    }
+
+    return block;
   }
 
-  createBlock(data) {
-    const previousBlock = this.getLatestBlock();
-    const newBlock = new Block(data, previousBlock.hash);
+  addBlock(data) {
+    let previousBlock = this.chain[this.chain.length - 1];
+    let newBlock = new Block(data, previousBlock.hash);
+    newBlock = this.mine(newBlock);
     this.chain.push(newBlock);
+  }
+
+  validateChain() {
+    for (let i = 1; i < this.chain.length; i++) {
+      const reHash = this.mine(this.chain[i]);
+
+      if (this.chain[i].previousHash !== this.chain[i - 1].hash) {
+        return `Block ${i} is not the same as block ${i - 1} hash`;
+      }
+      if (reHash.hash !== this.chain[i].hash) {
+        return `Block ${i} hash is not Correct`;
+      }
+    }
+
+    return `Blockchain is valid`;
   }
 }
 
 const blockchain = new Blockchain();
-
-for (let i = 0; i < 10; i++) {
-  blockchain.createBlock("Block " + (i + 1));
-}
-
-console.log(blockchain.chain);
+blockchain.addBlock("2nd Block");
+blockchain.addBlock("3rd Block");
+blockchain.addBlock("4th Block");
+console.log(blockchain.validateChain());

@@ -2,19 +2,16 @@ import sha256 from "crypto-js";
 
 class Block {
   hash;
-  previousHash;
   timestamp;
   data;
+  previousHash;
+  nonce = 0;
 
   constructor(data, previousHash = "N/A") {
+    this.timestamp = Date.now();
     this.data = data;
     this.previousHash = previousHash;
-    this.timestamp = Date.now();
-    this.hash = this.calculateHash(data);
-  }
-
-  calculateHash(data) {
-    return sha256.SHA256(data).toString();
+    this.hash = "";
   }
 }
 
