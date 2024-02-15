@@ -1,0 +1,16 @@
+{
+  "name": "lesson-1",
+  "version": "1.0.0",
+  "description": "BlockChain Lesson-1 Course",
+  "main": "Block.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Khaled",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "prettier": "^3.2.5"
+  }
+}
